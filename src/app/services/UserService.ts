@@ -1,4 +1,6 @@
-import { IUser } from "../protocols/interfaces";
+import bcrypt from "bcryptjs";
+import { IUser } from "../../protocols/interfaces";
+import { generateAccessToken } from "../../utils/generateToken";
 import UserRepository from "../repositories/UserRepository";
 
 class UserService {
@@ -20,7 +22,13 @@ class UserService {
       throw new Error("User already exists");
     }
 
-    const user = await UserRepository.create({ name, password, email });
+    const numberOfSalt = 12;
+    const passwordHash = await bcrypt.hash(password, numberOfSalt);
+    const user = await UserRepository.create({
+      name,
+      email,
+      password: passwordHash,
+    });
     return user;
   }
 
@@ -64,11 +72,19 @@ class UserService {
     return deletedUser;
   }
 
-  auth(email: string, password: string) {
-    const user = UserRepository.findByEmail(email);
+  async auth(email: string, password: string) {
+    const user = await UserRepository.findByEmail(email);
     if (!user) {
       throw new Error("User or password incorrect");
     }
+
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+    if (!passwordIsValid) {
+      throw new Error("User or password incorrect");
+    }
+
+    const token = generateAccessToken(user);
+    return { token };
   }
 }
 

@@ -2,11 +2,41 @@ import { NextFunction, Request, Response } from "express";
 import NewsService from "../services/NewsService";
 
 class NewsController {
+  async index(req: Request, res: Response, next: NextFunction) {
+    try {
+      const posts = await NewsService.index();
+      return res.status(200).json(posts);
+    } catch (error) {
+      next(error);
+    }
+  }
   async store(req: Request, res: Response, next: NextFunction) {
     try {
-      const { author } = req.user_id;
+      const author = req.user_id;
       const { slug, title, content } = req.body;
-      const news = await NewsService.create({ slug, title, content });
+      const news = await NewsService.create({ slug, title, content, author });
+      return res.status(201).json(news);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async show(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const post = await NewsService.show(id);
+      return res.status(200).json(post);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const author = req.user_id;
+      const deletedPost = await NewsService.delete(id, author);
+      return res.status(200).json(deletedPost);
     } catch (error) {
       next(error);
     }

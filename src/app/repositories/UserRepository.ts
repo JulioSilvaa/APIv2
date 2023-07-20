@@ -1,13 +1,21 @@
-import { IUser } from "../protocols/interfaces";
+import { IUser } from "../../protocols/interfaces";
 import { prisma } from "./prisma/client";
 
 class UserRepository {
   async findAll() {
-    return await prisma.user.findMany({});
+    return await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
   }
 
   async findByEmail(email: string) {
-    return await prisma.user.findUnique({ where: { email } });
+    return await prisma.user.findFirst({ where: { email } });
   }
 
   async create({ name, password, email }: IUser) {

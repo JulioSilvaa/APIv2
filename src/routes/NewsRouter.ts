@@ -4,6 +4,9 @@ import AuthMiddleware from "../app/middlewares/AuthMiddleware";
 
 const router = Router();
 
-router.post("/post", AuthMiddleware.auth, NewsController.store);
+router.get("/", NewsController.index);
+router.get("/:id", NewsController.show);
+router.delete("/:id", AuthMiddleware.auth, NewsController.delete);
+router.post("/", AuthMiddleware.auth, NewsController.store);
 
 export default router;

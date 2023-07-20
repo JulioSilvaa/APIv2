@@ -10,24 +10,28 @@ class AuthMiddleware {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-      res.status(401);
+      return res.send(401);
     }
 
-    const [, token] = authHeader?.split(" ");
+    const [, token] = authHeader.split(" ");
 
     if (!token) {
-      res.status(401);
+      return res.send(401);
     }
 
-    if (process.env.JWT_TOKEN) {
-      const { sub } = jwt.verify(token, process.env.JWT_TOKEN) as IPayload;
-      req.user_id = sub;
-
+    if (process.env.JWT_ACCESS_SECRET)
       try {
+        const { sub } = jwt.verify(
+          token,
+          process.env.JWT_ACCESS_SECRET
+        ) as IPayload;
+
+        req.user_id = sub;
+
+        next();
       } catch (error) {
         return res.status(500).json({ message: error });
       }
-    }
   }
 }
 
