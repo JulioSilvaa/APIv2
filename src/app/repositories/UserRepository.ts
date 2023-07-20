@@ -7,6 +7,13 @@ class UserRepository {
       select: {
         id: true,
         name: true,
+        posts: {
+          select: {
+            title: true,
+            slug: true,
+            content: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",

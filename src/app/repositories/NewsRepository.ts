@@ -10,6 +10,14 @@ class NewsRepository {
 
   async findAll() {
     return await prisma.news.findMany({
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        content: true,
+        createdAt: true,
+        author: { select: { name: true, id: true } },
+      },
       orderBy: {
         createdAt: "desc",
       },
