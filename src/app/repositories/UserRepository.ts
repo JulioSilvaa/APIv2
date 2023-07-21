@@ -13,6 +13,9 @@ class UserRepository {
             slug: true,
             content: true,
           },
+          orderBy: {
+            createdAt: "desc",
+          },
         },
       },
       orderBy: {
@@ -31,6 +34,12 @@ class UserRepository {
 
   async findById(id: string) {
     return await prisma.user.findUnique({ where: { id } });
+  }
+
+  async findByName(name: string) {
+    return await prisma.user.findMany({
+      where: { name: { contains: name, mode: "insensitive" } },
+    });
   }
 
   async update({ id, name, password, email }: IUser) {

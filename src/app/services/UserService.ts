@@ -54,6 +54,15 @@ class UserService {
     return updated;
   }
 
+  async search(name: any) {
+    if (!name) {
+      throw new Error("user is required");
+    }
+
+    const user = await UserRepository.findByName(name);
+    return user;
+  }
+
   async delete(id: string) {
     if (!id) {
       throw new Error("Id is required");

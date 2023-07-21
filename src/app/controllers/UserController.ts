@@ -31,6 +31,16 @@ class UserController {
     }
   }
 
+  async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { name } = req.query;
+      const user = await UserService.search(name);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
