@@ -41,6 +41,24 @@ class NewsController {
     }
   }
 
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const author = req.user_id;
+      const { slug, title, content } = req.body;
+      const post = await NewsService.update({
+        id,
+        slug,
+        title,
+        content,
+        author,
+      });
+      res.status(200).json(post);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;

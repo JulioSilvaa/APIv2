@@ -16,7 +16,12 @@ class NewsService {
       throw new Error("Fill in all required fields");
     }
 
-    const news = await NewsRepository.create({ slug, title, content, author });
+    const news = await NewsRepository.create({
+      slug,
+      title,
+      content,
+      author,
+    });
     return news;
   }
 
@@ -30,7 +35,37 @@ class NewsService {
     if (!title) throw new Error("title is required");
 
     const post = await NewsRepository.findByName(title);
+
+    if (post.length === 0) {
+      throw new Error("Posts list is not found");
+    }
     return post;
+  }
+
+  async update({ id, slug, title, content, author }: INews) {
+    if (!id) {
+      throw new Error("id is required");
+    }
+
+    const post = await NewsRepository.findById(id);
+
+    if (!post) {
+      throw new Error("post is not found");
+    }
+
+    if (post.authorId !== author) {
+      throw new Error("author is not authorized");
+    }
+
+    const newPost = await NewsRepository.update({
+      id,
+      slug,
+      title,
+      content,
+      author,
+    });
+
+    return newPost;
   }
 
   async delete(id: string, author: string) {

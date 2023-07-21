@@ -28,9 +28,16 @@ class NewsRepository {
     return await prisma.news.findFirst({ where: { id: id } });
   }
 
+  async update({ id, slug, title, content, author }: INews) {
+    return await prisma.news.update({
+      where: { id },
+      data: { slug, title, content, authorId: author },
+    });
+  }
+
   async findByName(title: string) {
     return await prisma.news.findMany({
-      where: { title: { contains: title } },
+      where: { title: { contains: title, mode: "insensitive" } },
       orderBy: {
         createdAt: "desc",
       },

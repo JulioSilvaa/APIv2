@@ -7,6 +7,7 @@ export interface IUser {
 }
 
 export interface INews {
+  id?: string;
   slug: string;
   title: string;
   content: string;
