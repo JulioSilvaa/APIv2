@@ -6,7 +6,7 @@ import app from "./server/server";
 const port = process.env.PORT || 3000;
 
 app.use("/user", UserRouter);
-app.use("/post", NewsRouter);
+app.use("/news", NewsRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);

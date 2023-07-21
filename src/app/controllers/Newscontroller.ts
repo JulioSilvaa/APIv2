@@ -31,6 +31,16 @@ class NewsController {
     }
   }
 
+  async showParams(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { title } = req.query;
+      const post = await NewsService.showByName(title);
+      res.status(200).json(post);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;

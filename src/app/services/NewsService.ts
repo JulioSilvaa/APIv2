@@ -22,8 +22,14 @@ class NewsService {
 
   async show(id: string) {
     if (!id) throw new Error("id is required");
-
     const post = await NewsRepository.findById(id);
+    return post;
+  }
+
+  async showByName(title: any) {
+    if (!title) throw new Error("title is required");
+
+    const post = await NewsRepository.findByName(title);
     return post;
   }
 

@@ -28,6 +28,15 @@ class NewsRepository {
     return await prisma.news.findFirst({ where: { id: id } });
   }
 
+  async findByName(title: string) {
+    return await prisma.news.findMany({
+      where: { title: { contains: title } },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  }
+
   async delete(id: string) {
     return await prisma.news.delete({ where: { id: id } });
   }
