@@ -44,8 +44,15 @@ class UserController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      const userId = req.user_id;
       const { name, email, password } = req.body;
-      const user = await UserService.update({ id, name, email, password });
+      const user = await UserService.update({
+        id,
+        name,
+        email,
+        password,
+        userId,
+      });
       res.status(200).json(user);
     } catch (error) {
       next(error);
@@ -54,8 +61,9 @@ class UserController {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
+      const userId = req.user_id;
       const { id } = req.params;
-      const user = await UserService.delete(id);
+      const user = await UserService.delete(id, userId);
       res.status(200).json(user);
     } catch (error) {
       next(error);

@@ -37,7 +37,7 @@ class UserService {
     return user;
   }
 
-  async update({ id, name, password, email }: IUser) {
+  async update({ id, name, password, email, userId }: IUser) {
     if (!id) {
       throw new Error("Id is required");
     }
@@ -48,6 +48,10 @@ class UserService {
 
     if (findUser.id !== id) {
       throw new Error("Id is not a valid");
+    }
+
+    if (findUser.id !== userId) {
+      throw new Error("User is not authorized");
     }
 
     const updated = await UserRepository.update({ id, name, password, email });
@@ -63,7 +67,7 @@ class UserService {
     return user;
   }
 
-  async delete(id: string) {
+  async delete(id: string, userId: string) {
     if (!id) {
       throw new Error("Id is required");
     }
@@ -75,6 +79,10 @@ class UserService {
 
     if (findUser.id !== id) {
       throw new Error("Id is not a valid");
+    }
+
+    if (findUser.id !== userId) {
+      throw new Error("User is not authorized");
     }
 
     const deletedUser = await UserRepository.delete(id);
