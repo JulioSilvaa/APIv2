@@ -16,7 +16,7 @@
     "build",
     "add-build"
   ],
-  "author": "",
+  "author": "Julio Silva",
   "license": "ISC",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
