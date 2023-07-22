@@ -50,6 +50,38 @@ class NewsController {
             }
         });
     }
+    showParams(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { title } = req.query;
+                const post = yield NewsService_1.default.showByName(title);
+                res.status(200).json(post);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    update(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                const author = req.user_id;
+                const { slug, title, content } = req.body;
+                const post = yield NewsService_1.default.update({
+                    id,
+                    slug,
+                    title,
+                    content,
+                    author,
+                });
+                res.status(200).json(post);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
     delete(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

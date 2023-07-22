@@ -49,12 +49,31 @@ class UserController {
             }
         });
     }
+    search(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { name } = req.query;
+                const user = yield UserService_1.default.search(name);
+                res.status(200).json(user);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
     update(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
+                const userId = req.user_id;
                 const { name, email, password } = req.body;
-                const user = yield UserService_1.default.update({ id, name, email, password });
+                const user = yield UserService_1.default.update({
+                    id,
+                    name,
+                    email,
+                    password,
+                    userId,
+                });
                 res.status(200).json(user);
             }
             catch (error) {
@@ -65,8 +84,9 @@ class UserController {
     delete(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const userId = req.user_id;
                 const { id } = req.params;
-                const user = yield UserService_1.default.delete(id);
+                const user = yield UserService_1.default.delete(id, userId);
                 res.status(200).json(user);
             }
             catch (error) {

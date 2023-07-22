@@ -40,6 +40,24 @@ class NewsRepository {
             return yield client_1.prisma.news.findFirst({ where: { id: id } });
         });
     }
+    update({ id, slug, title, content, author }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield client_1.prisma.news.update({
+                where: { id },
+                data: { slug, title, content, authorId: author },
+            });
+        });
+    }
+    findByName(title) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield client_1.prisma.news.findMany({
+                where: { title: { contains: title, mode: "insensitive" } },
+                orderBy: {
+                    createdAt: "desc",
+                },
+            });
+        });
+    }
     delete(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.prisma.news.delete({ where: { id: id } });

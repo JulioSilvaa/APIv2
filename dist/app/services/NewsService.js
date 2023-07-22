@@ -28,7 +28,12 @@ class NewsService {
             if (!content || !title || !content) {
                 throw new Error("Fill in all required fields");
             }
-            const news = yield NewsRepository_1.default.create({ slug, title, content, author });
+            const news = yield NewsRepository_1.default.create({
+                slug,
+                title,
+                content,
+                author,
+            });
             return news;
         });
     }
@@ -38,6 +43,39 @@ class NewsService {
                 throw new Error("id is required");
             const post = yield NewsRepository_1.default.findById(id);
             return post;
+        });
+    }
+    showByName(title) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!title)
+                throw new Error("title is required");
+            const post = yield NewsRepository_1.default.findByName(title);
+            if (post.length === 0) {
+                throw new Error("Posts list is not found");
+            }
+            return post;
+        });
+    }
+    update({ id, slug, title, content, author }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!id) {
+                throw new Error("id is required");
+            }
+            const post = yield NewsRepository_1.default.findById(id);
+            if (!post) {
+                throw new Error("post is not found");
+            }
+            if (post.authorId !== author) {
+                throw new Error("author is not authorized");
+            }
+            const newPost = yield NewsRepository_1.default.update({
+                id,
+                slug,
+                title,
+                content,
+                author,
+            });
+            return newPost;
         });
     }
     delete(id, author) {

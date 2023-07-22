@@ -23,6 +23,9 @@ class UserRepository {
                             slug: true,
                             content: true,
                         },
+                        orderBy: {
+                            createdAt: "desc",
+                        },
                     },
                 },
                 orderBy: {
@@ -44,6 +47,13 @@ class UserRepository {
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.prisma.user.findUnique({ where: { id } });
+        });
+    }
+    findByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield client_1.prisma.user.findMany({
+                where: { name: { contains: name, mode: "insensitive" } },
+            });
         });
     }
     update({ id, name, password, email }) {

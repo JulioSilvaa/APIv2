@@ -50,7 +50,7 @@ class UserService {
             return user;
         });
     }
-    update({ id, name, password, email }) {
+    update({ id, name, password, email, userId }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!id) {
                 throw new Error("Id is required");
@@ -61,12 +61,24 @@ class UserService {
             }
             if (findUser.id !== id) {
                 throw new Error("Id is not a valid");
+            }
+            if (findUser.id !== userId) {
+                throw new Error("User is not authorized");
             }
             const updated = yield UserRepository_1.default.update({ id, name, password, email });
             return updated;
         });
     }
-    delete(id) {
+    search(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!name) {
+                throw new Error("user is required");
+            }
+            const user = yield UserRepository_1.default.findByName(name);
+            return user;
+        });
+    }
+    delete(id, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!id) {
                 throw new Error("Id is required");
@@ -77,6 +89,9 @@ class UserService {
             }
             if (findUser.id !== id) {
                 throw new Error("Id is not a valid");
+            }
+            if (findUser.id !== userId) {
+                throw new Error("User is not authorized");
             }
             const deletedUser = yield UserRepository_1.default.delete(id);
             return deletedUser;

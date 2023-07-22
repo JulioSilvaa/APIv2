@@ -4,11 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const Newscontroller_1 = __importDefault(require("../app/controllers/Newscontroller"));
+const NewsController_1 = __importDefault(require("../app/controllers/NewsController"));
 const AuthMiddleware_1 = __importDefault(require("../app/middlewares/AuthMiddleware"));
 const router = (0, express_1.Router)();
-router.get("/", Newscontroller_1.default.index);
-router.get("/:id", Newscontroller_1.default.show);
-router.delete("/:id", AuthMiddleware_1.default.auth, Newscontroller_1.default.delete);
-router.post("/", AuthMiddleware_1.default.auth, Newscontroller_1.default.store);
+router.get("/", NewsController_1.default.index);
+router.get("/search", NewsController_1.default.showParams);
+router.get("/:id", NewsController_1.default.show);
+router.patch("/:id", AuthMiddleware_1.default.auth, NewsController_1.default.update);
+router.delete("/:id", AuthMiddleware_1.default.auth, NewsController_1.default.delete);
+router.post("/", AuthMiddleware_1.default.auth, NewsController_1.default.store);
 exports.default = router;
