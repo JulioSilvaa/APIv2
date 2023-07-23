@@ -39,6 +39,14 @@ class UserRepository {
   async findByName(name: string) {
     return await prisma.user.findMany({
       where: { name: { contains: name, mode: "insensitive" } },
+      orderBy: { createdAt: "desc" },
+      select: {
+        email: false,
+        id: true,
+        name: true,
+        createdAt: true,
+        _count: true,
+      },
     });
   }
 
