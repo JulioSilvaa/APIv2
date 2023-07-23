@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
+import app from "./config/server";
 import NewsRouter from "./routes/NewsRouter";
 import UserRouter from "./routes/UserRouter";
-import app from "./server/server";
 
 const port = process.env.PORT || 3000;
 
-app.use("/user", UserRouter);
-app.use("/news", NewsRouter);
+app.use("/api/v2/user", UserRouter);
+app.use("/api/v2/news", NewsRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
