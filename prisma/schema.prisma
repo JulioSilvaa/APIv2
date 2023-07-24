@@ -18,6 +18,7 @@ model News {
   title     String   @db.VarChar(255)
   slug      String
   content   String
+  newsUrl String?
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
 

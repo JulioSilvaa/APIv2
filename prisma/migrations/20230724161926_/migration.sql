@@ -6,6 +6,7 @@ CREATE TABLE "news" (
     "title" VARCHAR(255) NOT NULL,
     "slug" TEXT NOT NULL,
     "content" TEXT NOT NULL,
+    "newsUrl" TEXT,
     "authorId" TEXT NOT NULL,
 
     CONSTRAINT "news_pkey" PRIMARY KEY ("id")
