@@ -53,6 +53,14 @@ class UserRepository {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.prisma.user.findMany({
                 where: { name: { contains: name, mode: "insensitive" } },
+                orderBy: { createdAt: "desc" },
+                select: {
+                    email: false,
+                    id: true,
+                    name: true,
+                    createdAt: true,
+                    _count: true,
+                },
             });
         });
     }

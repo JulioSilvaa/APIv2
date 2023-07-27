@@ -1,6 +1,8 @@
 import { Router } from "express";
-import NewsController from "../app/controllers/NewsController";
+import NewsController from "../app/controllers/Newscontroller";
 import AuthMiddleware from "../app/middlewares/AuthMiddleware";
+
+import upload from "../config/multer";
 
 const router = Router();
 
@@ -9,6 +11,11 @@ router.get("/search", NewsController.showParams);
 router.get("/:id", NewsController.show);
 router.patch("/:id", AuthMiddleware.auth, NewsController.update);
 router.delete("/:id", AuthMiddleware.auth, NewsController.delete);
-router.post("/", AuthMiddleware.auth, NewsController.store);
+router.post(
+  "/",
+  AuthMiddleware.auth,
+  upload.array("file", 2),
+  NewsController.store
+);
 
 export default router;

@@ -30,8 +30,10 @@ class NewsController {
             try {
                 const author = req.user_id;
                 const { slug, title, content } = req.body;
-                const news = yield NewsService_1.default.create({ slug, title, content, author });
-                return res.status(201).json(news);
+                const image = req.file;
+                console.log(image);
+                // const news = await NewsService.create({ slug, title, content, author });
+                // return res.status(201).json(news);
             }
             catch (error) {
                 next(error);
