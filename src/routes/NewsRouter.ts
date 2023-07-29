@@ -1,5 +1,5 @@
 import { Router } from "express";
-import NewsController from "../app/controllers/Newscontroller";
+import NewsController from "../app/controllers/NewsController";
 import AuthMiddleware from "../app/middlewares/AuthMiddleware";
 
 import upload from "../config/multer";
