@@ -30,7 +30,7 @@ class NewsController {
             try {
                 const author = req.user_id;
                 const { slug, title, content } = req.body;
-                const image = req.file;
+                const image = req.files;
                 const news = yield NewsService_1.default.create({
                     slug,
                     title,

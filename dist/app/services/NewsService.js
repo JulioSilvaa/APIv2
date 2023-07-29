@@ -31,18 +31,27 @@ class NewsService {
                 throw new Error("Fill in all required fields");
             }
             const findAuthorByName = yield UserRepository_1.default.findById(author);
-            const { data, error } = yield supabase_1.default
-                .from("teste")
-                .upload(`/images/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/${Date.now()}_${image.originalname}`, image.buffer);
-            const imageUrl = yield supabase_1.default
-                .from("teste")
-                .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);
+            const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+            const imageUrls = [];
+            for (const imageFile of image) {
+                const imageSizeBytes = imageFile.buffer.length;
+                if (imageSizeBytes > MAX_IMAGE_SIZE) {
+                    throw new Error(`Imagem ${imageFile.originalname} excede o tamanho máximo permitido.`);
+                }
+                const { data } = yield supabase_1.default
+                    .from("teste")
+                    .upload(`/images/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/${Date.now()}_${imageFile.originalname}`, imageFile.buffer, { cacheControl: "3600", upsert: true });
+                const imageUrl = yield supabase_1.default
+                    .from("teste")
+                    .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);
+                imageUrls.push(imageUrl.data.publicUrl);
+            }
             const news = yield NewsRepository_1.default.create({
                 slug,
                 title,
                 content,
                 author,
-                imageUrl: imageUrl.data.publicUrl,
+                imageUrl: imageUrls,
             });
             return news;
         });

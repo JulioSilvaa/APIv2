@@ -10,28 +10,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model News {
-  id        String      @id @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   title     String   @db.VarChar(255)
   slug      String
   content   String
-  newsUrl String?
+  newsUrl   String[]
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
 
   @@map("news")
 }
 
-
 model User {
-  id      String      @id @default(uuid())
-  email   String   @unique
-  name    String
-  password String
-  posts   News[]
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  posts     News[]
   createdAt DateTime @default(now())
 
   @@map("users")
