@@ -1,5 +1,7 @@
+import storageClient from "../../config/supabse";
 import { INews } from "../../protocols/interfaces";
 import NewsRepository from "../repositories/NewsRepository";
+import UserRepository from "../repositories/UserRepository";
 
 class NewsService {
   async index() {
@@ -11,16 +13,30 @@ class NewsService {
     return posts;
   }
 
-  async create({ slug, title, content, author }: INews) {
+  async create({ slug, title, content, author, image }: INews) {
     if (!content || !title || !content) {
       throw new Error("Fill in all required fields");
     }
+
+    const findAuthorByName = await UserRepository.findById(author);
+
+    const { data, error } = await storageClient
+      .from("teste")
+      .upload(
+        `/images/${findAuthorByName?.name}/${Date.now()}_${image.originalname}`,
+        image.buffer
+      );
+
+    const imageUrl = await storageClient
+      .from("teste")
+      .getPublicUrl(data?.path as any);
 
     const news = await NewsRepository.create({
       slug,
       title,
       content,
       author,
+      imageUrl: imageUrl.data.publicUrl,
     });
     return news;
   }

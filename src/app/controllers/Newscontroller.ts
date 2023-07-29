@@ -15,9 +15,14 @@ class NewsController {
       const author = req.user_id;
       const { slug, title, content } = req.body;
       const image = req.file;
-      console.log(image);
-      // const news = await NewsService.create({ slug, title, content, author });
-      // return res.status(201).json(news);
+      const news = await NewsService.create({
+        slug,
+        title,
+        content,
+        author,
+        image,
+      });
+      return res.status(201).json(news);
     } catch (error) {
       next(error);
     }

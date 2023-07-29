@@ -11,10 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("./prisma/client");
 class NewsRepository {
-    create({ slug, title, content, author }) {
+    create({ slug, title, content, author, imageUrl }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.prisma.news.create({
-                data: { slug, title, content, authorId: author },
+                data: { slug, title, content, authorId: author, newsUrl: imageUrl },
             });
         });
     }
@@ -27,6 +27,7 @@ class NewsRepository {
                     title: true,
                     content: true,
                     createdAt: true,
+                    newsUrl: true,
                     author: { select: { name: true, id: true } },
                 },
                 orderBy: {

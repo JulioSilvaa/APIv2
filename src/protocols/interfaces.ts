@@ -13,4 +13,6 @@ export interface INews {
   title: string;
   content: string;
   author: string;
+  image?: any;
+  imageUrl?: any;
 }

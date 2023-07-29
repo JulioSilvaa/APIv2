@@ -2,9 +2,9 @@ import { INews } from "../../protocols/interfaces";
 import { prisma } from "./prisma/client";
 
 class NewsRepository {
-  async create({ slug, title, content, author }: INews) {
+  async create({ slug, title, content, author, imageUrl }: INews) {
     return await prisma.news.create({
-      data: { slug, title, content, authorId: author },
+      data: { slug, title, content, authorId: author, newsUrl: imageUrl },
     });
   }
 
@@ -16,6 +16,7 @@ class NewsRepository {
         title: true,
         content: true,
         createdAt: true,
+        newsUrl: true,
         author: { select: { name: true, id: true } },
       },
       orderBy: {

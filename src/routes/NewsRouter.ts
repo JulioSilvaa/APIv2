@@ -14,7 +14,7 @@ router.delete("/:id", AuthMiddleware.auth, NewsController.delete);
 router.post(
   "/",
   AuthMiddleware.auth,
-  upload.array("file", 2),
+  upload.single("file"),
   NewsController.store
 );
 
