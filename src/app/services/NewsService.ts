@@ -1,4 +1,4 @@
-import storageClient from "../../config/supabse";
+import storageClient from "../../config/supabase";
 import { INews } from "../../protocols/interfaces";
 import NewsRepository from "../repositories/NewsRepository";
 import UserRepository from "../repositories/UserRepository";

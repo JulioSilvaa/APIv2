@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const supabse_1 = __importDefault(require("../../config/supabse"));
+const supabase_1 = __importDefault(require("../../config/supabase"));
 const NewsRepository_1 = __importDefault(require("../repositories/NewsRepository"));
 const UserRepository_1 = __importDefault(require("../repositories/UserRepository"));
 class NewsService {
@@ -31,10 +31,10 @@ class NewsService {
                 throw new Error("Fill in all required fields");
             }
             const findAuthorByName = yield UserRepository_1.default.findById(author);
-            const { data, error } = yield supabse_1.default
+            const { data, error } = yield supabase_1.default
                 .from("teste")
                 .upload(`/images/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/${Date.now()}_${image.originalname}`, image.buffer);
-            const imageUrl = yield supabse_1.default
+            const imageUrl = yield supabase_1.default
                 .from("teste")
                 .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);
             const news = yield NewsRepository_1.default.create({

@@ -13,8 +13,8 @@ router.patch("/:id", AuthMiddleware.auth, NewsController.update);
 router.delete("/:id", AuthMiddleware.auth, NewsController.delete);
 router.post(
   "/",
-  AuthMiddleware.auth,
   upload.single("file"),
+  AuthMiddleware.auth,
   NewsController.store
 );
 

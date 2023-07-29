@@ -13,5 +13,5 @@ router.get("/search", Newscontroller_1.default.showParams);
 router.get("/:id", Newscontroller_1.default.show);
 router.patch("/:id", AuthMiddleware_1.default.auth, Newscontroller_1.default.update);
 router.delete("/:id", AuthMiddleware_1.default.auth, Newscontroller_1.default.delete);
-router.post("/", AuthMiddleware_1.default.auth, multer_1.default.single("file"), Newscontroller_1.default.store);
+router.post("/", multer_1.default.single("file"), AuthMiddleware_1.default.auth, Newscontroller_1.default.store);
 exports.default = router;
