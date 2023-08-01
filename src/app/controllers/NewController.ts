@@ -4,7 +4,9 @@ import NewsService from "../services/NewsService";
 class NewsController {
   async index(req: Request, res: Response, next: NextFunction) {
     try {
-      const posts = await NewsService.index();
+      const limit = req.params.limit;
+      const per_page = req.params.per_page;
+      const posts = await NewsService.index(limit, per_page);
       return res.status(200).json(posts);
     } catch (error) {
       next(error);

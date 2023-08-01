@@ -11,27 +11,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("./prisma/client");
 class UserRepository {
-    findAll() {
+    findAll(limit, per_page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield client_1.prisma.user.findMany({
-                select: {
-                    id: true,
-                    name: true,
-                    posts: {
-                        select: {
-                            title: true,
-                            slug: true,
-                            content: true,
-                        },
-                        orderBy: {
-                            createdAt: "desc",
+            const [users, total] = yield client_1.prisma.$transaction([
+                client_1.prisma.user.findMany({
+                    select: {
+                        id: true,
+                        name: true,
+                        posts: {
+                            select: {
+                                title: true,
+                                slug: true,
+                                content: true,
+                            },
+                            orderBy: {
+                                createdAt: "desc",
+                            },
                         },
                     },
-                },
-                orderBy: {
-                    createdAt: "desc",
-                },
-            });
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                    skip: limit,
+                    take: per_page,
+                }),
+                client_1.prisma.user.count(),
+            ]);
+            const totalPages = Math.ceil(total / per_page);
+            return {
+                total,
+                totalPages,
+                users,
+            };
         });
     }
     findByEmail(email) {

@@ -17,7 +17,9 @@ class NewsController {
     index(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const posts = yield NewsService_1.default.index();
+                const limit = req.params.limit;
+                const per_page = req.params.per_page;
+                const posts = yield NewsService_1.default.index(limit, per_page);
                 return res.status(200).json(posts);
             }
             catch (error) {

@@ -4,7 +4,9 @@ import UserService from "../services/UserService";
 class UserController {
   async index(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await UserService.index();
+      const limit = req.params.limit;
+      const per_page = req.params.per_page;
+      const user = await UserService.index(limit, per_page);
       res.status(200).json(user);
     } catch (error) {
       next(error);

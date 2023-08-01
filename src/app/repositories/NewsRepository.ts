@@ -8,21 +8,32 @@ class NewsRepository {
     });
   }
 
-  async findAll() {
-    return await prisma.news.findMany({
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        content: true,
-        createdAt: true,
-        newsUrl: true,
-        author: { select: { name: true, id: true } },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+  async findAll(limit: number, per_page: number) {
+    const [news, total] = await prisma.$transaction([
+      prisma.news.findMany({
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          content: true,
+          createdAt: true,
+          newsUrl: true,
+          author: { select: { name: true, id: true } },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip: limit,
+        take: per_page,
+      }),
+      prisma.news.count(),
+    ]);
+    const totalPages = Math.ceil(total / per_page);
+    return {
+      total,
+      totalPages,
+      news,
+    };
   }
 
   async findById(id: string) {

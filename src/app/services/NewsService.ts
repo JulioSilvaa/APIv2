@@ -4,10 +4,13 @@ import NewsRepository from "../repositories/NewsRepository";
 import UserRepository from "../repositories/UserRepository";
 
 class NewsService {
-  async index() {
-    const posts = await NewsRepository.findAll();
+  async index(limit: any, per_page: any) {
+    const _limit = Number(limit) || 0;
+    const _per_page = Number(per_page) || 10;
 
-    if (posts.length === 0) {
+    const posts = await NewsRepository.findAll(_limit, _per_page);
+
+    if (posts.news.length === 0) {
       throw new Error("Posts list is empty");
     }
     return posts;
@@ -34,7 +37,7 @@ class NewsService {
       const { data } = await storageClient
         .from("teste")
         .upload(
-          `/images/${findAuthorByName?.name}/${Date.now()}_${
+          `/images/${findAuthorByName?.name}/${title}/${Date.now()}_${
             imageFile.originalname
           }`,
           imageFile.buffer,

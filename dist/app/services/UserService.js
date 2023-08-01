@@ -16,10 +16,12 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const generateToken_1 = require("../../utils/generateToken");
 const UserRepository_1 = __importDefault(require("../repositories/UserRepository"));
 class UserService {
-    index() {
+    index(limit, per_page) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userList = yield UserRepository_1.default.findAll();
-            if (userList.length === 0) {
+            const _limit = Number(limit) || 0;
+            const _per_page = Number(per_page) || 5;
+            const userList = yield UserRepository_1.default.findAll(_limit, _per_page);
+            if (userList.users.length === 0) {
                 throw new Error("Users not found");
             }
             return userList;

@@ -16,10 +16,12 @@ const supabase_1 = __importDefault(require("../../config/supabase"));
 const NewsRepository_1 = __importDefault(require("../repositories/NewsRepository"));
 const UserRepository_1 = __importDefault(require("../repositories/UserRepository"));
 class NewsService {
-    index() {
+    index(limit, per_page) {
         return __awaiter(this, void 0, void 0, function* () {
-            const posts = yield NewsRepository_1.default.findAll();
-            if (posts.length === 0) {
+            const _limit = Number(limit) || 0;
+            const _per_page = Number(per_page) || 10;
+            const posts = yield NewsRepository_1.default.findAll(_limit, _per_page);
+            if (posts.news.length === 0) {
                 throw new Error("Posts list is empty");
             }
             return posts;
@@ -40,7 +42,7 @@ class NewsService {
                 }
                 const { data } = yield supabase_1.default
                     .from("teste")
-                    .upload(`/images/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/${Date.now()}_${imageFile.originalname}`, imageFile.buffer, { cacheControl: "3600", upsert: true });
+                    .upload(`/images/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/${title}/${Date.now()}_${imageFile.originalname}`, imageFile.buffer, { cacheControl: "3600", upsert: true });
                 const imageUrl = yield supabase_1.default
                     .from("teste")
                     .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);

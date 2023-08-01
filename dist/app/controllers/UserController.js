@@ -17,7 +17,9 @@ class UserController {
     index(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield UserService_1.default.index();
+                const limit = req.params.limit;
+                const per_page = req.params.per_page;
+                const user = yield UserService_1.default.index(limit, per_page);
                 res.status(200).json(user);
             }
             catch (error) {

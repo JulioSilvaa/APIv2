@@ -4,9 +4,12 @@ import { generateAccessToken } from "../../utils/generateToken";
 import UserRepository from "../repositories/UserRepository";
 
 class UserService {
-  async index() {
-    const userList = await UserRepository.findAll();
-    if (userList.length === 0) {
+  async index(limit: any, per_page: any) {
+    const _limit = Number(limit) || 0;
+    const _per_page = Number(per_page) || 5;
+
+    const userList = await UserRepository.findAll(_limit, _per_page);
+    if (userList.users.length === 0) {
       throw new Error("Users not found");
     }
     return userList;

@@ -2,26 +2,37 @@ import { IUser } from "../../protocols/interfaces";
 import { prisma } from "./prisma/client";
 
 class UserRepository {
-  async findAll() {
-    return await prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        posts: {
-          select: {
-            title: true,
-            slug: true,
-            content: true,
-          },
-          orderBy: {
-            createdAt: "desc",
+  async findAll(limit: number, per_page: number) {
+    const [users, total] = await prisma.$transaction([
+      prisma.user.findMany({
+        select: {
+          id: true,
+          name: true,
+          posts: {
+            select: {
+              title: true,
+              slug: true,
+              content: true,
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
           },
         },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip: limit,
+        take: per_page,
+      }),
+      prisma.user.count(),
+    ]);
+    const totalPages = Math.ceil(total / per_page);
+    return {
+      total,
+      totalPages,
+      users,
+    };
   }
 
   async findByEmail(email: string) {

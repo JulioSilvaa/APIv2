@@ -18,22 +18,33 @@ class NewsRepository {
             });
         });
     }
-    findAll() {
+    findAll(limit, per_page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield client_1.prisma.news.findMany({
-                select: {
-                    id: true,
-                    slug: true,
-                    title: true,
-                    content: true,
-                    createdAt: true,
-                    newsUrl: true,
-                    author: { select: { name: true, id: true } },
-                },
-                orderBy: {
-                    createdAt: "desc",
-                },
-            });
+            const [news, total] = yield client_1.prisma.$transaction([
+                client_1.prisma.news.findMany({
+                    select: {
+                        id: true,
+                        slug: true,
+                        title: true,
+                        content: true,
+                        createdAt: true,
+                        newsUrl: true,
+                        author: { select: { name: true, id: true } },
+                    },
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                    skip: limit,
+                    take: per_page,
+                }),
+                client_1.prisma.news.count(),
+            ]);
+            const totalPages = Math.ceil(total / per_page);
+            return {
+                total,
+                totalPages,
+                news,
+            };
         });
     }
     findById(id) {
