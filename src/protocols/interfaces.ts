@@ -5,6 +5,8 @@ export interface IUser {
   password: string;
   email: string;
   passwordHash?: string;
+  username: string;
+  avatarUrl: any;
 }
 
 export interface INews {

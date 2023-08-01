@@ -8,6 +8,7 @@ class UserRepository {
         select: {
           id: true,
           name: true,
+          avatarUrl: true,
           posts: {
             select: {
               title: true,
@@ -39,8 +40,10 @@ class UserRepository {
     return await prisma.user.findFirst({ where: { email } });
   }
 
-  async create({ name, password, email }: IUser) {
-    return await prisma.user.create({ data: { name, password, email } });
+  async create({ name, password, email, username, avatarUrl }: IUser) {
+    return await prisma.user.create({
+      data: { avatarUrl, password, name, username, email },
+    });
   }
 
   async findById(id: string) {

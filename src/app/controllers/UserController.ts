@@ -15,8 +15,15 @@ class UserController {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, email, password } = req.body;
-      const user = await UserService.create({ name, email, password });
+      const { name, email, password, username } = req.body;
+      const avatarUrl = req?.file;
+      const user = await UserService.create({
+        name,
+        email,
+        password,
+        username,
+        avatarUrl,
+      });
       res.status(201).json(user);
     } catch (error) {
       next(error);
@@ -47,12 +54,15 @@ class UserController {
     try {
       const { id } = req.params;
       const userId = req.user_id;
-      const { name, email, password } = req.body;
+      const avatarUrl = req?.file;
+      const { name, email, password, username } = req.body;
       const user = await UserService.update({
         id,
         name,
         email,
         password,
+        username,
+        avatarUrl,
         userId,
       });
       res.status(200).json(user);

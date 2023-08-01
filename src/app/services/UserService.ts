@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import storageClient from "../../config/supabase";
 import { IUser } from "../../protocols/interfaces";
 import { generateAccessToken } from "../../utils/generateToken";
 import UserRepository from "../repositories/UserRepository";
@@ -15,8 +16,8 @@ class UserService {
     return userList;
   }
 
-  async create({ name, password, email }: IUser) {
-    if (!name || !password || !email) {
+  async create({ name, password, email, username, avatarUrl }: IUser) {
+    if (!name || !password || !email || !username || !avatarUrl) {
       throw new Error("Fill in all required fields");
     }
 
@@ -25,12 +26,35 @@ class UserService {
       throw new Error("User already exists");
     }
 
+    const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+    const imageSize = avatarUrl.buffer.length;
+
+    if (imageSize > MAX_IMAGE_SIZE) {
+      throw new Error(
+        `Imagem ${avatarUrl.originalname} excede o tamanho máximo permitido.`
+      );
+    }
+
+    const { data } = await storageClient
+      .from("teste")
+      .upload(
+        `/${name}/Avatar/${Date.now()}_${avatarUrl.originalname}`,
+        avatarUrl.buffer,
+        { cacheControl: "3600", upsert: true }
+      );
+
+    const imageUrl = await storageClient
+      .from("teste")
+      .getPublicUrl(data?.path as any);
+
     const numberOfSalt = 12;
     const passwordHash = await bcrypt.hash(password, numberOfSalt);
     const user = await UserRepository.create({
       name,
       email,
       password: passwordHash,
+      username,
+      avatarUrl: imageUrl.data.publicUrl,
     });
     return user;
   }
@@ -40,7 +64,15 @@ class UserService {
     return user;
   }
 
-  async update({ id, name, password, email, userId }: IUser) {
+  async update({
+    id,
+    name,
+    password,
+    email,
+    userId,
+    username,
+    avatarUrl,
+  }: IUser) {
     if (!id) {
       throw new Error("Id is required");
     }
@@ -57,7 +89,14 @@ class UserService {
       throw new Error("User is not authorized");
     }
 
-    const updated = await UserRepository.update({ id, name, password, email });
+    const updated = await UserRepository.update({
+      id,
+      name,
+      password,
+      email,
+      username,
+      avatarUrl,
+    });
     return updated;
   }
 

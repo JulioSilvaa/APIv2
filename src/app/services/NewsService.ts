@@ -37,7 +37,7 @@ class NewsService {
       const { data } = await storageClient
         .from("teste")
         .upload(
-          `/images/${findAuthorByName?.name}/${title}/${Date.now()}_${
+          `/${findAuthorByName?.name}/Images/${title}/${Date.now()}_${
             imageFile.originalname
           }`,
           imageFile.buffer,
@@ -47,7 +47,6 @@ class NewsService {
       const imageUrl = await storageClient
         .from("teste")
         .getPublicUrl(data?.path as any);
-
       imageUrls.push(imageUrl.data.publicUrl);
     }
 

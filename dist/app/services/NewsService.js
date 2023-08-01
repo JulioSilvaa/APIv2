@@ -42,7 +42,7 @@ class NewsService {
                 }
                 const { data } = yield supabase_1.default
                     .from("teste")
-                    .upload(`/images/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/${title}/${Date.now()}_${imageFile.originalname}`, imageFile.buffer, { cacheControl: "3600", upsert: true });
+                    .upload(`/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/Images/${title}/${Date.now()}_${imageFile.originalname}`, imageFile.buffer, { cacheControl: "3600", upsert: true });
                 const imageUrl = yield supabase_1.default
                     .from("teste")
                     .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);

@@ -30,8 +30,15 @@ class UserController {
     create(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, email, password } = req.body;
-                const user = yield UserService_1.default.create({ name, email, password });
+                const { name, email, password, username } = req.body;
+                const avatarUrl = req === null || req === void 0 ? void 0 : req.file;
+                const user = yield UserService_1.default.create({
+                    name,
+                    email,
+                    password,
+                    username,
+                    avatarUrl,
+                });
                 res.status(201).json(user);
             }
             catch (error) {
@@ -68,12 +75,15 @@ class UserController {
             try {
                 const { id } = req.params;
                 const userId = req.user_id;
-                const { name, email, password } = req.body;
+                const avatarUrl = req === null || req === void 0 ? void 0 : req.file;
+                const { name, email, password, username } = req.body;
                 const user = yield UserService_1.default.update({
                     id,
                     name,
                     email,
                     password,
+                    username,
+                    avatarUrl,
                     userId,
                 });
                 res.status(200).json(user);

@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const supabase_1 = __importDefault(require("../../config/supabase"));
 const generateToken_1 = require("../../utils/generateToken");
 const UserRepository_1 = __importDefault(require("../repositories/UserRepository"));
 class UserService {
@@ -27,21 +28,34 @@ class UserService {
             return userList;
         });
     }
-    create({ name, password, email }) {
+    create({ name, password, email, username, avatarUrl }) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!name || !password || !email) {
+            if (!name || !password || !email || !username || !avatarUrl) {
                 throw new Error("Fill in all required fields");
             }
             const userExists = yield UserRepository_1.default.findByEmail(email);
             if (userExists) {
                 throw new Error("User already exists");
             }
+            const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+            const imageSize = avatarUrl.buffer.length;
+            if (imageSize > MAX_IMAGE_SIZE) {
+                throw new Error(`Imagem ${avatarUrl.originalname} excede o tamanho máximo permitido.`);
+            }
+            const { data } = yield supabase_1.default
+                .from("teste")
+                .upload(`/${name}/Avatar/${Date.now()}_${avatarUrl.originalname}`, avatarUrl.buffer, { cacheControl: "3600", upsert: true });
+            const imageUrl = yield supabase_1.default
+                .from("teste")
+                .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);
             const numberOfSalt = 12;
             const passwordHash = yield bcryptjs_1.default.hash(password, numberOfSalt);
             const user = yield UserRepository_1.default.create({
                 name,
                 email,
                 password: passwordHash,
+                username,
+                avatarUrl: imageUrl.data.publicUrl,
             });
             return user;
         });
@@ -52,7 +66,7 @@ class UserService {
             return user;
         });
     }
-    update({ id, name, password, email, userId }) {
+    update({ id, name, password, email, userId, username, avatarUrl, }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!id) {
                 throw new Error("Id is required");
@@ -67,7 +81,14 @@ class UserService {
             if (findUser.id !== userId) {
                 throw new Error("User is not authorized");
             }
-            const updated = yield UserRepository_1.default.update({ id, name, password, email });
+            const updated = yield UserRepository_1.default.update({
+                id,
+                name,
+                password,
+                email,
+                username,
+                avatarUrl,
+            });
             return updated;
         });
     }

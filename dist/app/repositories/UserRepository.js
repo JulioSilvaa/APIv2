@@ -18,6 +18,7 @@ class UserRepository {
                     select: {
                         id: true,
                         name: true,
+                        avatarUrl: true,
                         posts: {
                             select: {
                                 title: true,
@@ -50,9 +51,11 @@ class UserRepository {
             return yield client_1.prisma.user.findFirst({ where: { email } });
         });
     }
-    create({ name, password, email }) {
+    create({ name, password, email, username, avatarUrl }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield client_1.prisma.user.create({ data: { name, password, email } });
+            return yield client_1.prisma.user.create({
+                data: { avatarUrl, password, name, username, email },
+            });
         });
     }
     findById(id) {
