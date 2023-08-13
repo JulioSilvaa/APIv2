@@ -10,12 +10,17 @@ const LIMIT_IMAGE = 3;
 router.get("/", NewsController.index);
 router.get("/search", NewsController.showParams);
 router.get("/:id", NewsController.show);
-router.patch("/:id", AuthMiddleware.auth, NewsController.update);
+router.patch(
+  "/:id",
+  AuthMiddleware.auth,
+  upload.array("file", LIMIT_IMAGE),
+  NewsController.update
+);
 router.delete("/:id", AuthMiddleware.auth, NewsController.delete);
 router.post(
   "/",
-  upload.array("file", LIMIT_IMAGE),
   AuthMiddleware.auth,
+  upload.array("file", LIMIT_IMAGE),
   NewsController.store
 );
 

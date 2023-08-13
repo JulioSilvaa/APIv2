@@ -77,7 +77,7 @@ class NewsService {
             return post;
         });
     }
-    update({ id, slug, title, content, author }) {
+    update({ id, slug, title, content, author, image }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!id) {
                 throw new Error("id is required");
@@ -89,12 +89,31 @@ class NewsService {
             if (post.authorId !== author) {
                 throw new Error("author is not authorized");
             }
+            const findAuthorByName = yield UserRepository_1.default.findById(author);
+            const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+            const imageUrls = [];
+            for (const imageFile of image) {
+                const imageSizeBytes = imageFile.buffer.length;
+                if (imageSizeBytes > MAX_IMAGE_SIZE) {
+                    throw new Error(`Imagem ${imageFile.originalname} excede o tamanho máximo permitido.`);
+                }
+                const { data } = yield supabase_1.default
+                    .from("teste")
+                    .update(`/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/Images/${title}/${Date.now()}_${imageFile.originalname}`, imageFile.buffer, { cacheControl: "3600", upsert: true });
+                console.log(data === null || data === void 0 ? void 0 : data.path);
+                const imageUrl = yield supabase_1.default
+                    .from("teste")
+                    .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);
+                imageUrls.push(imageUrl === null || imageUrl === void 0 ? void 0 : imageUrl.data.publicUrl);
+                console.log(imageUrls, "URL");
+            }
             const newPost = yield NewsRepository_1.default.update({
                 id,
                 slug,
                 title,
                 content,
                 author,
+                image: imageUrls,
             });
             return newPost;
         });

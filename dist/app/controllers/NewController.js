@@ -76,6 +76,7 @@ class NewsController {
             try {
                 const { id } = req.params;
                 const author = req.user_id;
+                const image = req.files;
                 const { slug, title, content } = req.body;
                 const post = yield NewsService_1.default.update({
                     id,
@@ -83,6 +84,7 @@ class NewsController {
                     title,
                     content,
                     author,
+                    image,
                 });
                 res.status(200).json(post);
             }

@@ -131,7 +131,7 @@ class UserService {
                 throw new Error("User or password incorrect");
             }
             const token = (0, generateToken_1.generateAccessToken)(user);
-            return { token };
+            return { token, user };
         });
     }
 }

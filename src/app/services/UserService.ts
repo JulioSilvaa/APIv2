@@ -143,7 +143,7 @@ class UserService {
     }
 
     const token = generateAccessToken(user);
-    return { token };
+    return { token, user };
   }
 }
 

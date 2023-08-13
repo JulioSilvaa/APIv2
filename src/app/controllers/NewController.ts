@@ -54,6 +54,7 @@ class NewsController {
     try {
       const { id } = req.params;
       const author = req.user_id;
+      const image = req.files;
       const { slug, title, content } = req.body;
       const post = await NewsService.update({
         id,
@@ -61,6 +62,7 @@ class NewsController {
         title,
         content,
         author,
+        image,
       });
       res.status(200).json(post);
     } catch (error) {

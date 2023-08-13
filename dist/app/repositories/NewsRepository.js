@@ -52,11 +52,11 @@ class NewsRepository {
             return yield client_1.prisma.news.findFirst({ where: { id: id } });
         });
     }
-    update({ id, slug, title, content, author }) {
+    update({ id, slug, title, content, author, image }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.prisma.news.update({
                 where: { id },
-                data: { slug, title, content, authorId: author },
+                data: { slug, title, content, authorId: author, newsUrl: image },
             });
         });
     }

@@ -78,7 +78,7 @@ class NewsService {
     return post;
   }
 
-  async update({ id, slug, title, content, author }: INews) {
+  async update({ id, slug, title, content, author, image }: INews) {
     if (!id) {
       throw new Error("id is required");
     }
@@ -93,12 +93,44 @@ class NewsService {
       throw new Error("author is not authorized");
     }
 
+    const findAuthorByName = await UserRepository.findById(author);
+    const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+    const imageUrls = [];
+
+    for (const imageFile of image) {
+      const imageSizeBytes = imageFile.buffer.length;
+
+      if (imageSizeBytes > MAX_IMAGE_SIZE) {
+        throw new Error(
+          `Imagem ${imageFile.originalname} excede o tamanho máximo permitido.`
+        );
+      }
+
+      const { data } = await storageClient
+        .from("teste")
+        .update(
+          `/${findAuthorByName?.name}/Images/${title}/${Date.now()}_${
+            imageFile.originalname
+          }`,
+          imageFile.buffer,
+          { cacheControl: "3600", upsert: true }
+        );
+      console.log(data?.path);
+
+      const imageUrl = await storageClient
+        .from("teste")
+        .getPublicUrl(data?.path as any);
+      imageUrls.push(imageUrl?.data.publicUrl);
+      console.log(imageUrls, "URL");
+    }
+
     const newPost = await NewsRepository.update({
       id,
       slug,
       title,
       content,
       author,
+      image: imageUrls,
     });
 
     return newPost;

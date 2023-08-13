@@ -40,10 +40,10 @@ class NewsRepository {
     return await prisma.news.findFirst({ where: { id: id } });
   }
 
-  async update({ id, slug, title, content, author }: INews) {
+  async update({ id, slug, title, content, author, image }: INews) {
     return await prisma.news.update({
       where: { id },
-      data: { slug, title, content, authorId: author },
+      data: { slug, title, content, authorId: author, newsUrl: image },
     });
   }
 
