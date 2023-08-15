@@ -17,7 +17,7 @@ class UserService {
   }
 
   async create({ name, password, email, username, avatarUrl }: IUser) {
-    if (!name || !password || !email || !username || !avatarUrl) {
+    if (!name || !password || !email) {
       throw new Error("Fill in all required fields");
     }
 

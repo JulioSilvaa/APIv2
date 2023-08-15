@@ -30,7 +30,7 @@ class UserService {
     }
     create({ name, password, email, username, avatarUrl }) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!name || !password || !email || !username || !avatarUrl) {
+            if (!name || !password || !email) {
                 throw new Error("Fill in all required fields");
             }
             const userExists = yield UserRepository_1.default.findByEmail(email);
