@@ -32,6 +32,7 @@ class UserController {
             try {
                 const { name, email, password, username } = req.body;
                 const avatarUrl = req === null || req === void 0 ? void 0 : req.file;
+                console.log(avatarUrl);
                 const user = yield UserService_1.default.create({
                     name,
                     email,

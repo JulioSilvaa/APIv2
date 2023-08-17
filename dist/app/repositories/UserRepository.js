@@ -24,6 +24,10 @@ class UserRepository {
                                 title: true,
                                 slug: true,
                                 content: true,
+                                newsUrl: true,
+                                id: true,
+                                createdAt: true,
+                                updatedAt: true,
                             },
                             orderBy: {
                                 createdAt: "desc",

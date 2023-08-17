@@ -17,6 +17,7 @@ class UserController {
     try {
       const { name, email, password, username } = req.body;
       const avatarUrl = req?.file;
+      console.log(avatarUrl);
       const user = await UserService.create({
         name,
         email,
