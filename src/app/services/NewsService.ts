@@ -108,7 +108,7 @@ class NewsService {
 
       const { data } = await storageClient
         .from("teste")
-        .update(
+        .upload(
           `/${findAuthorByName?.name}/Images/${title}/${Date.now()}_${
             imageFile.originalname
           }`,
