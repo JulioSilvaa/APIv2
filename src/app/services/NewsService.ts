@@ -109,19 +109,15 @@ class NewsService {
       const { data } = await storageClient
         .from("teste")
         .upload(
-          `/${findAuthorByName?.name}/Images/${title}/${Date.now()}_${
-            imageFile.originalname
-          }`,
+          `/${findAuthorByName?.name}/Images/${title}/_${imageFile.originalname}`,
           imageFile.buffer,
           { cacheControl: "3600", upsert: true }
         );
-      console.log(data?.path);
 
       const imageUrl = await storageClient
         .from("teste")
         .getPublicUrl(data?.path as any);
       imageUrls.push(imageUrl?.data.publicUrl);
-      console.log(imageUrls, "URL");
     }
 
     const newPost = await NewsRepository.update({
