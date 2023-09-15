@@ -29,7 +29,8 @@ class NewsRepository {
                         content: true,
                         createdAt: true,
                         newsUrl: true,
-                        author: { select: { name: true, id: true } },
+                        author: { select: { name: true, id: true, username: true } },
+                        updatedAt: true,
                     },
                     orderBy: {
                         createdAt: "desc",
