@@ -137,7 +137,7 @@ class UserService {
                 name: user.name,
                 createdAt: user.createdAt,
             };
-            const token = (0, generateToken_1.generateAccessToken)(user);
+            const token = (0, generateToken_1.generateAccessToken)(user.id);
             return { token, userWithPasswordRemoved };
         });
     }
