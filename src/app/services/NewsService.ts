@@ -37,9 +37,7 @@ class NewsService {
       const { data } = await storageClient
         .from("teste")
         .upload(
-          `/${findAuthorByName?.name}/Images/${title}/${Date.now()}_${
-            imageFile.originalname
-          }`,
+          `/${findAuthorByName?.name}/Images/_${imageFile.originalname}`,
           imageFile.buffer,
           { cacheControl: "3600", upsert: true }
         );
@@ -99,6 +97,7 @@ class NewsService {
 
     for (const imageFile of image) {
       const imageSizeBytes = imageFile.buffer.length;
+      const storagePath = `/${findAuthorByName?.name}/Images/_${imageFile.originalname}`;
 
       if (imageSizeBytes > MAX_IMAGE_SIZE) {
         throw new Error(
@@ -108,11 +107,9 @@ class NewsService {
 
       const { data } = await storageClient
         .from("teste")
-        .upload(
-          `/${findAuthorByName?.name}/Images/${title}/_${imageFile.originalname}`,
-          imageFile.buffer,
-          { cacheControl: "3600", upsert: true }
-        );
+        .update(storagePath, imageFile.buffer, {
+          cacheControl: "3600",
+        });
 
       const imageUrl = await storageClient
         .from("teste")
