@@ -130,8 +130,15 @@ class UserService {
             if (!passwordIsValid) {
                 throw new Error("User or password incorrect");
             }
-            const token = (0, generateToken_1.generateAccessToken)(user);
-            return { token, user };
+            const userWithPasswordRemoved = {
+                id: user.id,
+                avatarUrl: user.avatarUrl,
+                username: user.username,
+                name: user.name,
+                createdAt: user.createdAt,
+            };
+            const token = (0, generateToken_1.generateAccessToken)(user.id);
+            return { token, userWithPasswordRemoved };
         });
     }
 }
