@@ -1,12 +1,13 @@
+import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
 
-export function generateAccessToken(id: string) {
+export function generateAccessToken(user: User) {
   if (!process.env.JWT_ACCESS_SECRET) {
     throw new Error("Access token failed");
   }
-  return jwt.sign({ userId: id }, process.env.JWT_ACCESS_SECRET, {
+  return jwt.sign({ userId: user.id }, process.env.JWT_ACCESS_SECRET, {
     expiresIn: "7d",
-    subject: id,
+    subject: user.id,
   });
 }
 
