@@ -122,23 +122,23 @@ class UserService {
     }
     auth(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield UserRepository_1.default.findByEmail(email);
-            if (!user) {
+            const FindUser = yield UserRepository_1.default.findByEmail(email);
+            if (!FindUser) {
                 throw new Error("User or password incorrect");
             }
-            const passwordIsValid = yield bcryptjs_1.default.compare(password, user.password);
+            const passwordIsValid = yield bcryptjs_1.default.compare(password, FindUser.password);
             if (!passwordIsValid) {
                 throw new Error("User or password incorrect");
             }
-            const userWithPasswordRemoved = {
-                id: user.id,
-                avatarUrl: user.avatarUrl,
-                username: user.username,
-                name: user.name,
-                createdAt: user.createdAt,
+            const user = {
+                id: FindUser.id,
+                avatarUrl: FindUser.avatarUrl,
+                username: FindUser.username,
+                name: FindUser.name,
+                createdAt: FindUser.createdAt,
             };
             const token = (0, generateToken_1.generateAccessToken)(user.id);
-            return { token, userWithPasswordRemoved };
+            return { token, user };
         });
     }
 }

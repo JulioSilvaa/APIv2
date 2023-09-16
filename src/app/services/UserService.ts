@@ -132,25 +132,25 @@ class UserService {
   }
 
   async auth(email: string, password: string) {
-    const user = await UserRepository.findByEmail(email);
-    if (!user) {
+    const FindUser = await UserRepository.findByEmail(email);
+    if (!FindUser) {
       throw new Error("User or password incorrect");
     }
 
-    const passwordIsValid = await bcrypt.compare(password, user.password);
+    const passwordIsValid = await bcrypt.compare(password, FindUser.password);
     if (!passwordIsValid) {
       throw new Error("User or password incorrect");
     }
-    const userWithPasswordRemoved = {
-      id: user.id,
-      avatarUrl: user.avatarUrl,
-      username: user.username,
-      name: user.name,
-      createdAt: user.createdAt,
+    const user = {
+      id: FindUser.id,
+      avatarUrl: FindUser.avatarUrl,
+      username: FindUser.username,
+      name: FindUser.name,
+      createdAt: FindUser.createdAt,
     };
 
     const token = generateAccessToken(user.id);
-    return { token, userWithPasswordRemoved };
+    return { token, user };
   }
 }
 
