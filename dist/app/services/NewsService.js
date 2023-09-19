@@ -42,7 +42,7 @@ class NewsService {
                 }
                 const { data } = yield supabase_1.default
                     .from("teste")
-                    .upload(`/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/Images/_${imageFile.originalname}`, imageFile.buffer, { cacheControl: "3600", upsert: true });
+                    .upload(`/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/Images/${title}/_${imageFile.originalname}`, imageFile.buffer, { cacheControl: "3600", upsert: true });
                 const imageUrl = yield supabase_1.default
                     .from("teste")
                     .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);
@@ -94,13 +94,12 @@ class NewsService {
             const imageUrls = [];
             for (const imageFile of image) {
                 const imageSizeBytes = imageFile.buffer.length;
-                const storagePath = `/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/Images/_${imageFile.originalname}`;
                 if (imageSizeBytes > MAX_IMAGE_SIZE) {
                     throw new Error(`Imagem ${imageFile.originalname} excede o tamanho máximo permitido.`);
                 }
                 const { data } = yield supabase_1.default
                     .from("teste")
-                    .update(storagePath, imageFile.buffer, {
+                    .update(`/${findAuthorByName === null || findAuthorByName === void 0 ? void 0 : findAuthorByName.name}/Images/${title}/_${imageFile.originalname}`, imageFile.buffer, {
                     cacheControl: "3600",
                 });
                 const imageUrl = yield supabase_1.default

@@ -44,7 +44,10 @@ class UserService {
             }
             const { data } = yield supabase_1.default
                 .from("teste")
-                .upload(`/${name}/Avatar/${Date.now()}_${avatarUrl.originalname}`, avatarUrl.buffer, { cacheControl: "3600", upsert: true });
+                .upload(`/${name}/Avatar/_${avatarUrl.originalname}`, avatarUrl.buffer, {
+                cacheControl: "3600",
+                upsert: true,
+            });
             const imageUrl = yield supabase_1.default
                 .from("teste")
                 .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);
@@ -81,13 +84,28 @@ class UserService {
             if (findUser.id !== userId) {
                 throw new Error("User is not authorized");
             }
+            const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+            const imageSize = avatarUrl === null || avatarUrl === void 0 ? void 0 : avatarUrl.buffer.length;
+            if (imageSize > MAX_IMAGE_SIZE) {
+                throw new Error(`Imagem ${avatarUrl.originalname} excede o tamanho máximo permitido.`);
+            }
+            const { data } = yield supabase_1.default
+                .from("teste")
+                .update(`/${name}/Avatar/_${avatarUrl === null || avatarUrl === void 0 ? void 0 : avatarUrl.originalname}`, avatarUrl === null || avatarUrl === void 0 ? void 0 : avatarUrl.buffer, {
+                cacheControl: "3600",
+                upsert: true,
+            });
+            console.log(data);
+            const imageUrl = yield supabase_1.default
+                .from("teste")
+                .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);
             const updated = yield UserRepository_1.default.update({
                 id,
                 name,
                 password,
                 email,
                 username,
-                avatarUrl,
+                avatarUrl: imageUrl,
             });
             return updated;
         });

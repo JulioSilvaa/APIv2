@@ -68,10 +68,10 @@ class UserRepository {
     });
   }
 
-  async update({ id, name, password, email }: IUser) {
+  async update({ id, name, password, email,username }: IUser) {
     return await prisma.user.update({
       where: { id },
-      data: { name, password, email },
+      data: { name, password, email, username },
     });
   }
 

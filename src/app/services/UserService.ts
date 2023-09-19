@@ -37,11 +37,10 @@ class UserService {
 
     const { data } = await storageClient
       .from("teste")
-      .upload(
-        `/${name}/Avatar/${Date.now()}_${avatarUrl.originalname}`,
-        avatarUrl.buffer,
-        { cacheControl: "3600", upsert: true }
-      );
+      .upload(`/${name}/Avatar/_${avatarUrl.originalname}`, avatarUrl.buffer, {
+        cacheControl: "3600",
+        upsert: true,
+      });
 
     const imageUrl = await storageClient
       .from("teste")
@@ -89,13 +88,38 @@ class UserService {
       throw new Error("User is not authorized");
     }
 
+    const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+    const imageSize = avatarUrl?.buffer.length;
+
+    if (imageSize > MAX_IMAGE_SIZE) {
+      throw new Error(
+        `Imagem ${avatarUrl.originalname} excede o tamanho máximo permitido.`
+      );
+    }
+
+    const { data } = await storageClient
+      .from("teste")
+      .update(
+        `/${name}/Avatar/_${avatarUrl?.originalname}`,
+        avatarUrl?.buffer,
+        {
+          cacheControl: "3600",
+          upsert: true,
+        }
+      );
+    console.log(data);
+
+    const imageUrl = await storageClient
+      .from("teste")
+      .getPublicUrl(data?.path as any);
+
     const updated = await UserRepository.update({
       id,
       name,
       password,
       email,
       username,
-      avatarUrl,
+      avatarUrl: imageUrl,
     });
     return updated;
   }
