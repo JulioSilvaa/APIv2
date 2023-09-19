@@ -13,6 +13,6 @@ router.get("/search", UserController_1.default.search);
 router.get("/:id", UserController_1.default.show);
 router.post("/register", multer_1.default.single("file"), UserController_1.default.create);
 router.post("/auth", UserController_1.default.auth);
-router.patch("/:id", AuthMiddleware_1.default.auth, UserController_1.default.update);
+router.patch("/:id", multer_1.default.single("file"), AuthMiddleware_1.default.auth, UserController_1.default.update);
 router.delete("/:id", AuthMiddleware_1.default.auth, UserController_1.default.delete);
 exports.default = router;

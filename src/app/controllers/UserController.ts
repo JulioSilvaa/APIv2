@@ -55,10 +55,7 @@ class UserController {
       const { id } = req.params;
       const userId = req.user_id;
       const avatarUrl = req?.file;
-      console.log(
-        "🚀 ~ file: UserController.ts:58 ~ UserController ~ update ~ avatarUrl:",
-        avatarUrl
-      );
+
       const { name, email, password, username } = req.body;
       const user = await UserService.update({
         id,

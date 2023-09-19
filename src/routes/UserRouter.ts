@@ -10,7 +10,12 @@ router.get("/search", UserController.search);
 router.get("/:id", UserController.show);
 router.post("/register", upload.single("file"), UserController.create);
 router.post("/auth", UserController.auth);
-router.patch("/:id", AuthMiddleware.auth, UserController.update);
+router.patch(
+  "/:id",
+  upload.single("file"),
+  AuthMiddleware.auth,
+  UserController.update
+);
 router.delete("/:id", AuthMiddleware.auth, UserController.delete);
 
 export default router;
