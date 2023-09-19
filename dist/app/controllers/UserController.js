@@ -32,7 +32,6 @@ class UserController {
             try {
                 const { name, email, password, username } = req.body;
                 const avatarUrl = req === null || req === void 0 ? void 0 : req.file;
-                console.log(avatarUrl);
                 const user = yield UserService_1.default.create({
                     name,
                     email,
@@ -77,6 +76,7 @@ class UserController {
                 const { id } = req.params;
                 const userId = req.user_id;
                 const avatarUrl = req === null || req === void 0 ? void 0 : req.file;
+                console.log("🚀 ~ file: UserController.ts:58 ~ UserController ~ update ~ avatarUrl:", avatarUrl);
                 const { name, email, password, username } = req.body;
                 const user = yield UserService_1.default.update({
                     id,

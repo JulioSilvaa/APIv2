@@ -37,11 +37,10 @@ class UserService {
 
     const { data } = await storageClient
       .from("teste")
-      .upload(
-        `/${name}/Avatar/${Date.now()}_${avatarUrl.originalname}`,
-        avatarUrl.buffer,
-        { cacheControl: "3600", upsert: true }
-      );
+      .upload(`/${name}/Avatar/_${avatarUrl.originalname}`, avatarUrl.buffer, {
+        cacheControl: "3600",
+        upsert: true,
+      });
 
     const imageUrl = await storageClient
       .from("teste")
@@ -88,6 +87,14 @@ class UserService {
     if (findUser.id !== userId) {
       throw new Error("User is not authorized");
     }
+
+    const { data } = await storageClient
+      .from("teste")
+      .update(`/${name}/Avatar/_${avatarUrl.originalname}`, avatarUrl.buffer, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+    console.log(data);
 
     const updated = await UserRepository.update({
       id,
