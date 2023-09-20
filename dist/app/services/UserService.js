@@ -87,27 +87,26 @@ class UserService {
             }
             const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
             const imageSizeBytes = avatarUrl.buffer.length;
-            const pathUrl = `/${name}/Avatar/_${avatarUrl.originalname}`;
+            console.log(avatarUrl, "URL");
             if (imageSizeBytes > MAX_IMAGE_SIZE) {
                 throw new Error(`Imagem ${avatarUrl.originalname} excede o tamanho máximo permitido.`);
             }
             const { data } = yield supabase_1.default
                 .from("teste")
-                .update(pathUrl, avatarUrl.buffer, {
+                .upload(`/${name}/Avatar/_${avatarUrl === null || avatarUrl === void 0 ? void 0 : avatarUrl.originalname}`, avatarUrl === null || avatarUrl === void 0 ? void 0 : avatarUrl.buffer, {
                 cacheControl: "3600",
-                upsert: true,
             });
             const imageUrl = yield supabase_1.default
                 .from("teste")
                 .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);
-            console.log((_a = imageUrl === null || imageUrl === void 0 ? void 0 : imageUrl.data) === null || _a === void 0 ? void 0 : _a.publicUrl);
+            const newUrl = (_a = imageUrl === null || imageUrl === void 0 ? void 0 : imageUrl.data) === null || _a === void 0 ? void 0 : _a.publicUrl;
             const updated = yield UserRepository_1.default.update({
                 id,
                 name,
                 password,
                 email,
                 username,
-                avatarUrl,
+                avatarUrl: newUrl,
             });
             return updated;
         });
