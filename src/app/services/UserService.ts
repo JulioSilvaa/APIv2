@@ -90,7 +90,7 @@ class UserService {
 
     const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
     const imageSizeBytes = avatarUrl.buffer.length;
-    console.log(avatarUrl, "URL");
+    const pathUrl = `/${name}/Avatar/_${avatarUrl.originalname}`;
 
     if (imageSizeBytes > MAX_IMAGE_SIZE) {
       throw new Error(
@@ -100,18 +100,16 @@ class UserService {
 
     const { data } = await storageClient
       .from("teste")
-      .upload(
-        `/${name}/Avatar/_${avatarUrl?.originalname}`,
-        avatarUrl?.buffer,
-        {
-          cacheControl: "3600",
-        }
-      );
+      .update(pathUrl, avatarUrl.buffer, {
+        cacheControl: "3600",
+        upsert: true,
+      });
 
     const imageUrl = await storageClient
       .from("teste")
       .getPublicUrl(data?.path as any);
-    const newUrl = imageUrl?.data?.publicUrl;
+
+    console.log(imageUrl?.data?.publicUrl);
 
     const updated = await UserRepository.update({
       id,
@@ -119,7 +117,7 @@ class UserService {
       password,
       email,
       username,
-      avatarUrl: newUrl,
+      avatarUrl,
     });
     return updated;
   }
