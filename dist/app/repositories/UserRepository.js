@@ -82,11 +82,11 @@ class UserRepository {
             });
         });
     }
-    update({ id, name, password, email, username, avatarUrl }) {
+    update({ id, name, email, username, avatarUrl }) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield client_1.prisma.user.update({
                 where: { id },
-                data: { name, password, email, username, avatarUrl },
+                data: { name, email, username, avatarUrl },
             });
         });
     }

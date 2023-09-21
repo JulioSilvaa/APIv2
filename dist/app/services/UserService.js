@@ -70,7 +70,6 @@ class UserService {
         });
     }
     update({ id, name, password, email, userId, username, avatarUrl, }) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             if (!id) {
                 throw new Error("Id is required");
@@ -86,28 +85,27 @@ class UserService {
                 throw new Error("User is not authorized");
             }
             const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
-            const imageSizeBytes = avatarUrl.buffer.length;
+            const imageSizeBytes = avatarUrl === null || avatarUrl === void 0 ? void 0 : avatarUrl.buffer.length;
             const pathUrl = `/${name}/Avatar/_${avatarUrl.originalname}`;
             if (imageSizeBytes > MAX_IMAGE_SIZE) {
                 throw new Error(`Imagem ${avatarUrl.originalname} excede o tamanho máximo permitido.`);
             }
             const { data } = yield supabase_1.default
                 .from("teste")
-                .update(pathUrl, avatarUrl.buffer, {
+                .update(pathUrl, avatarUrl === null || avatarUrl === void 0 ? void 0 : avatarUrl.buffer, {
                 cacheControl: "3600",
                 upsert: true,
             });
             const imageUrl = yield supabase_1.default
                 .from("teste")
                 .getPublicUrl(data === null || data === void 0 ? void 0 : data.path);
-            console.log((_a = imageUrl === null || imageUrl === void 0 ? void 0 : imageUrl.data) === null || _a === void 0 ? void 0 : _a.publicUrl);
             const updated = yield UserRepository_1.default.update({
                 id,
                 name,
                 password,
                 email,
                 username,
-                avatarUrl,
+                avatarUrl: imageUrl.data.publicUrl,
             });
             return updated;
         });
